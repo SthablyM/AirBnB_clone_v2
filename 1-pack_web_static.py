@@ -5,20 +5,13 @@ from datetime import datetime
 import os
 
 def do_pack():
-    """Generates a .tgz archive from the contents of the web_static folder."""
-    if not os.path.exists("versions"):
-        os.makedirs("versions")
-
-    now = datetime.now()
-    timestamp = now.strftime("%Y%m%d%H%M%S")
-
-    archive_name = f"web_static_{timestamp}.tgz"
-    archive_path = f"versions/{archive_name}"
-
-    try:
-        local(f"tar -cvzf {archive_path} web_static")
-        print(f"Archive created: {archive_path}")
-        return archive_path
-    except:
-        print("An error occurred while creating the archive")
+    """ Fabric script that generates a .tgz archive from the contents of the...
+    ...web_static folder """
+    local("sudo mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    file_ = "versions/web_static_{}.tgz".format(date)
+    result = local("sudo tar -cvzf {} web_static".format(file_))
+    if result.succeeded:
+        return file_
+    else:
         return None
